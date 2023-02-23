@@ -1,0 +1,24 @@
+<%- include('template-header', { title: 'Login page' }) -%>
+
+<div class="container">
+    <h1>Login</h1>
+    <%- message %>
+    
+    <form method="post" action="/xlogin">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username:</label>
+        <input type="text" name="username" id="username" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password:</label>
+        <input type="password" name="password" id="password" class="form-control">
+      </div>
+      <div class="mb-3">
+        <input type="submit" value="Login" class="btn btn-primary">
+      </div>
+    </form>
+    
+</div>
+
+
+<%- include('template-footer') -%>

@@ -1,0 +1,29 @@
+<%- include('template-header', { title: 'XLparser' }) -%>
+
+    <div class="container">
+        <h1>XLparser</h1>
+        <p>
+            <a href="/logout">Logout</a>
+        </p>
+
+        <% if(message){ %>
+        <div class="text">
+            <%- message %>
+        </div>
+        <% } else{ %>  
+            <div class="file-form">
+                <form method="post" action="/xlparser" enctype="multipart/form-data" >
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Load xlsx file</label>
+                        <input class="form-control" type="file" name="excel" id="formFile">
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-info">let's begin</button>
+                    </div>
+                </form>
+            </div>
+        <% } %>
+    </div>
+
+
+    <%- include('template-footer') -%>

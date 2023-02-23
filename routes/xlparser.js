@@ -2,9 +2,12 @@ const express = require('express');
 const formidable = require('formidable');
 const readXlsxFile = require('read-excel-file/node');
 const { readSheetNames } = require('read-excel-file/node');
+const parser = require('../parse');
 const router = express.Router();
 
 function restrict(req, res, next) {
+  // next();
+  // return;
   if (req.session.user) {
     next();
   } else {
@@ -25,7 +28,6 @@ router.post('/', restrict, function (req, res) {
       next(err);
       return;
     }
-    console.log(files);
     readFile(res, files.excel.filepath);
   });
 
@@ -33,6 +35,8 @@ router.post('/', restrict, function (req, res) {
 
 function readFile(res, file) {
   readSheetNames(file).then((sheetNames) => {
+    parser.readSheet(file, sheetNames[0]);
+
     const sheets = sheetNames.reduce((acc, sheet) => acc += ` <div class="sheet">${sheet}</div>`, '');
     res.render('xlparser', { title: 'XLparser result', message: sheets });
   });

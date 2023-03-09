@@ -6,8 +6,8 @@ const parser = require('../parse');
 const router = express.Router();
 
 function restrict(req, res, next) {
-  // next();
-  // return;
+  next();
+  return;
   if (req.session.user) {
     next();
   } else {
@@ -35,7 +35,8 @@ router.post('/', restrict, function (req, res) {
 
 function readFile(res, file) {
   readSheetNames(file).then((sheetNames) => {
-    parser.readSheet(file, sheetNames[0]);
+    console.log(sheetNames);
+    parser.readSheet(file, sheetNames);
 
     const sheets = sheetNames.reduce((acc, sheet) => acc += ` <div class="sheet">${sheet}</div>`, '');
     res.render('xlparser', { title: 'XLparser result', message: sheets });

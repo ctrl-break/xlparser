@@ -22,6 +22,11 @@ function restrict(req, res, next) {
 }
 
 router.get('/', restrict, function (req, res) {
+  if (store?.getItem('filePath')) {
+    viewLists(req, res);
+    return;
+  }
+  
   res.render('xlparser', { title: 'XLparser', message: {status: 'loadFile' }});
 });
 
@@ -37,17 +42,24 @@ router.post('/', restrict, function (req, res) {
 
 function parseLists(req, res) {
   // console.log(req);
-  // console.log('---');
 
-  initData(req);
+  initData();
 
-  const form = formidable();
+  const form = formidable({ multiples: true });
+
   form.parse(req, (err, fields, files) => {
     if (err) {
       next(err);
       return;
     }
-    res.render('xlparser', { title: 'XLparser result', message: {status: 'done', html: `${JSON.stringify({ fields  })}` }});
+
+    const choosedIndexes = Object.keys(fields).map(item => Number(item.split('__')[1]));
+    const lists = store.getItem('sheets').filter( (item, i) => choosedIndexes.includes(i));
+    const result = [];
+    lists.forEach( listName => result.push(parser.readSheet(listName, 8)));
+    console.log('parseLists =======', lists);
+
+    res.render('xlparser', { title: 'XLparser result', message: {status: 'done', html: `${JSON.stringify({result})}` }}); // , html: `${JSON.stringify({ result })}`
   });
   // console.log('parseLists =======');
   
@@ -63,43 +75,46 @@ function showLists(req, res) {
     }
     // console.log(files.excel);
     
-    const filePath = files.excel.filepath;
-    store.setItem('filePath', filePath);
-    req.session.filePath = filePath ?? '';
-    const excel = XLSX.readFile(filePath);
+    store.setItem('filePath', files.excel.filepath);
+    const excel = XLSX.readFile(files.excel.filepath);
     store.setItem('excel', excel);
-    const sheets = excel.SheetNames;
-    store.setItem('sheets', sheets);
+    store.setItem('sheets', excel.SheetNames);
+    store.setItem('fileName', String(files.excel.originalFilename));
 
-
-    const fileName = files.excel.originalFilename + '';
-    store.setItem('fileName', fileName);
-
-    let parserInfo = await db.getParseListData(fileName);
-
-    if (!parserInfo || parserInfo.length === 0) {
-      await db.setNewParseData(fileName, sheets);
-      console.log('loaded');
-      parserInfo = await db.getParseListData(fileName);
-    }
-
-    const viewData = parserInfo.map(item => 
-      ({
-        ...item, 
-        created: new Date(item.created).toISOString().slice(0, 16),
-        updated: item.updated ? new Date(item.updated).toISOString().slice(0, 16) : '',
-      }));
-
-    res.render('xlparser', { title: 'XLparser', message: { sheets: viewData, status: 'showLists' } });
+    viewLists(req, res);
   });
 }
 
-async function initData(req) {
+async function viewLists(req, res) {
+  const fileName = store.getItem('fileName');
+  const sheets = store.getItem('sheets');
+  let parserInfo = await db.getParseListData(fileName);
+
+  if (!parserInfo || parserInfo.length === 0) {
+    await db.setNewParseData(fileName, sheets);
+    console.log('loaded');
+    parserInfo = await db.getParseListData(fileName);
+  }
+
+  const viewData = parserInfo.map(item => 
+    ({
+      ...item, 
+      created: new Date(item.created).toLocaleString('sv-SE'),
+      updated: item.updated ? new Date(item.updated).toLocaleString('sv-SE') : '',
+    }));
+
+  res.render('xlparser', { title: 'XLparser', message: { sheets: viewData, status: 'showLists' } });
+}
+
+async function initData() {
+  if (store.getItem('cultivars')) {
+    return;
+  }
   const cultivars = await db.getCultivars();
   store.setItem('cultivars', cultivars);
   
-  console.log('-----------------------------------------------------------');
-  console.log(store.getItem('cultivars'));
+  // console.log('-----------------------------------------------------------');
+  // console.log(store.getItem('cultivars'));
   console.log(store.getItem('fileName'));
   console.log(store.getItem('sheets'));
   console.log('-----------------------------------------------------------');

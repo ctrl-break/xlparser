@@ -25,13 +25,13 @@ body {
 
 .table-cell {
   display: inline-block;
-  min-width: 120px;
+  min-width: 140px;
   margin-right: 24px;
 }
 
 .table_header>span{
   display: inline-block;
-  min-width: 120px;
+  min-width: 140px;
   margin-right: 24px;
 }
 .table_header .list_name{

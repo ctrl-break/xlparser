@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(session({
   resave: false, // don't save session if unmodified
   saveUninitialized: false, // don't create session until something stored
-  secret: 'shhhh, very secret 0000'
+  secret: '4986476346732749863749672748994378697986789237589653254'
 }));
 
 // Session-persisted message middleware

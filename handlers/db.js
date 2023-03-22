@@ -1,4 +1,4 @@
-const env = require('./.env.js');
+const env = require('../.env.js');
 const pgp = require('pg-promise')(/* options */)
 const dbConnect = pgp(`postgres://${env.DB_USERNAME}:${env.DB_PASS}@${env.DB_HOST}`);
 

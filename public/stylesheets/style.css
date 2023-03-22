@@ -1,8 +1,40 @@
 body {
   padding-top: 32px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+.strong {
+  font-weight: bold;
+}
+
+.secondary {
+  color: grey;
+}
+
+.small {
+  font-size: 14px;
+}
+
+.list_name{
+  display: inline-block;
+  width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 24px;
+}
+
+.table-cell {
+  display: inline-block;
+  min-width: 120px;
+  margin-right: 24px;
+}
+
+.table_header>span{
+  display: inline-block;
+  min-width: 120px;
+  margin-right: 24px;
+}
+.table_header .list_name{
+  width: 300px;
+  margin-left: 24px;
 }

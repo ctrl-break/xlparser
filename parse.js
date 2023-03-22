@@ -1,5 +1,6 @@
 const readXlsxFile = require('read-excel-file/node');
 const XLSX = require("xlsx");
+const db = require('./db');
 
 const schema = {
     '№': {
@@ -42,11 +43,28 @@ const fractions = [
 
 const parser = {
 
+    sheetNames: [],
+    excel: null,
+
+    resetData: () => {
+        parser.sheetNames = [];
+        parser.excel = null;
+    },
+
+    getSheetNames: (fileData) => {
+        if (parser.sheetNames.length) {
+           return parser.sheetNames; 
+        }
+        const result = XLSX.readFile(fileData);
+        return result.SheetNames;
+    },
+
     readSheet: (fileData, sheet) => {
         const result = XLSX.readFile(fileData);
         // console.log('**************--', result.SheetNames);
-        const firstPage = XLSX.utils.sheet_to_json(result.Sheets[result.SheetNames[0]]).slice(0, 8);
+        const firstPage = XLSX.utils.sheet_to_json(result.Sheets[result.SheetNames[0]], { header: 1 }).slice(0, 8);
         console.log(firstPage);
+        this.readDBCultivars();
         return '';
         return readXlsxFile(fileData, { sheet, schema }).then(res => {
             parser.getColumns(res);
@@ -61,7 +79,11 @@ const parser = {
         return ['done'];
     },
 
-    isItCulture: (culture) => true,
+    async readDBCultivars() {
+        const result = await db.getCultivars();
+        console.log('result:', result);
+        return result;
+    },
 }
 
 module.exports = parser;

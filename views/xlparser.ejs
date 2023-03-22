@@ -6,11 +6,13 @@
             <a href="/logout">Logout</a>
         </p>
 
-        <% if(message){ %>
-        <div class="text">
-            <%- message %>
-        </div>
-        <% } else{ %>  
+        <% if (message?.html && message.status === 'done') { %>
+            <div class="text">
+                <%- message.html %>
+            </div>
+        <% }  %>
+
+        <% if (message?.status === 'loadFile') { %>  
             <div class="file-form">
                 <form method="post" action="/xlparser" enctype="multipart/form-data" >
                     <div class="mb-3">
@@ -18,7 +20,44 @@
                         <input class="form-control" type="file" name="excel" id="formFile">
                     </div>
                     <div class="mb-3">
-                        <button type="submit" class="btn btn-info">let's begin</button>
+                        <button type="submit" class="btn btn-info">Start</button>
+                    </div>
+                </form>
+            </div>
+        <% } %>
+
+        <% if (message?.status === 'showLists' && message?.sheets) { %>  
+            <div class="lists-form">
+                <p class="strong">
+                    Какие листы необходимо спарсить?
+                </p>
+                <div class="table_header">
+                    <span class="list_name">Название листа</span>
+                    <span class="created">Создано</span>
+                    <span class="updated">Обновлено</span>
+                    <span class="status">Статус</span>
+                    <span class="list_type">Тип шаблона</span>
+                </div>
+                <form method="post" action="/xlparser?checkLists=true">
+                    <% message.sheets.forEach( function(sheet, index){ %>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault<%= index %>">
+                            <label class="form-check-label" for="flexCheckDefault<%= index %>">
+                                <span class="list_name"><%= sheet.list_name %></span>
+                            </label>
+
+                            <span class="table-cell secondary small"><%= sheet.created %></span>
+                            <span class="table-cell secondary small"><%= sheet.updated || '-' %></span>
+                            <span class="table-cell">-</span>
+                            <span class="table-cell">-</span>
+                        </div>                        
+                    <% }); %>
+                    <!-- <div class="mb-3">
+                        <label for="formFile" class="form-label">Load xlsx file</label>
+                        <input class="form-control" type="file" name="excel" id="formFile">
+                    </div> -->
+                    <div class="mb-3 mt-3">
+                        <button type="submit" class="btn btn-info">Choose lists</button>
                     </div>
                 </form>
             </div>

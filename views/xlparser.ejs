@@ -6,10 +6,42 @@
             <a href="/logout">Logout</a>
         </p>
 
-        <% if (message?.html && message.status === 'done') { %>
-            <div class="text">
+        <% if (message?.result && message.status === 'done') { %>
+
+            <% message.result.forEach( function(sheet, index) { %>
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">N</th>
+                    <th scope="col">Сорт</th>
+                    <th scope="col">Кол-во кустов</th>
+                    <th scope="col">Кол-во клубней (фракция 0)</th>
+                    <th scope="col">Кол-во клубней (фракция 1)</th>
+                    <th scope="col">Кол-во клубней (фракция 2)</th>
+                    <th scope="col">Кол-во клубней (фракция 3)</th>                    
+                    <th scope="col">Масса клубней (фракция 0)</th>
+                    <th scope="col">Масса клубней (фракция 1)</th>
+                    <th scope="col">Масса клубней (фракция 2)</th>
+                    <th scope="col">Масса клубней (фракция 3)</th>
+                    <th scope="col">Повтор</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <% sheet.forEach( function(row){ %>
+                        <% if (row) { %>
+                            <tr>
+                            <% row.forEach( function(cell, i){ %>
+                                <td><%= cell.value %></td>
+                            <% }); %>
+                            </tr>
+                        <% } %>
+                    <% }); %>
+                </tbody>
+              </table>
+              <% }); %>
+            <!-- <div class="text">
                 <%- message.html %>
-            </div>
+            </div> -->
         <% }  %>
 
         <% if (message?.status === 'loadFile') { %>  

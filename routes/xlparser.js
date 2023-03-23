@@ -56,10 +56,10 @@ function parseLists(req, res) {
     const choosedIndexes = Object.keys(fields).map(item => Number(item.split('__')[1]));
     const lists = store.getItem('sheets').filter( (item, i) => choosedIndexes.includes(i));
     const result = [];
-    lists.forEach( listName => result.push(parser.readSheet(listName, 8)));
-    console.log('parseLists =======', lists);
+    lists.forEach( listName => result.push( parser.readSheet(listName) ));
+    // console.log('parseLists =======', result);
 
-    res.render('xlparser', { title: 'XLparser result', message: {status: 'done', html: `${JSON.stringify({result})}` }}); // , html: `${JSON.stringify({ result })}`
+    res.render('xlparser', { title: 'XLparser result', message: {status: 'done', result, html: `${JSON.stringify({ result })}` }}); // , html: `${JSON.stringify({ result })}`
   });
   // console.log('parseLists =======');
   

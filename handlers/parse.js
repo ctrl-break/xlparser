@@ -1,50 +1,22 @@
 const XLSX = require("xlsx");
 const store = require('./store');
+const schemas = require('./templates');
 
-// const schema = {
-//     '№': {
-//         prop: 'num',
-//         type: Number
-//     },
-//     'culture': {
-//         prop: 'culture',
-//         type: String,
-//         required: true,
-//     },
-//     'count': {
-//         prop: 'count',
-//         type: Number
-//     },
-// }
-
-const fractions = [
-    {
-        lower_bound: 0,
-        upper_bound: 30,
-        id: 0
-    },
-    {
-        lower_bound: 31,
-        upper_bound: 50,
-        id: 1
-    },
-    {
-        lower_bound: 51,
-        upper_bound: 70,
-        id: 2
-    },
-    {
-        lower_bound: 71,
-        upper_bound: 75,
-        id: 3
-    },  
-]
+const isCultivarMeasureSchema1 = (rows) => ( typeof rows[0] === 'number' && typeof rows[1] === 'string' && typeof rows[2] === 'number');
+const getRawData = (row) => row.filter((item, index) => index <= 11);
 
 const parser = {
     readSheet: (sheetName, limit) => {
         const excel = store.getItem('excel');
+        const schema = [ ...schemas.schema1 ];
         const list = XLSX.utils.sheet_to_json(excel.Sheets[sheetName], { header: 1 });
-        return limit ? list.slice(0, limit) : list;
+        const filterData = list
+            .map(item => isCultivarMeasureSchema1(item) ? getRawData(item) : [])
+            .map( row => 
+                row.length ? row.map( (cell, index) => ({...schema[index], value: cell})) : null
+            );
+        // console.log(filterData.slice(0, limit));
+        return limit ? filterData.slice(0, limit) : filterData;
     },
 
     // async readDBCultivars() {

@@ -1,6 +1,6 @@
 <%- include('template-header', { title: 'XLparser' }) -%>
 
-    <div class="container">
+    <div class="<%= message.status === 'done' ? 'container-fluid' : 'container' %>">
         <h1>XLparser</h1>
         <p>
             <a href="/logout">Logout</a>
@@ -12,6 +12,8 @@
             <table class="table table-striped">
                 <thead>
                   <tr>
+                    <th scope="col">id</th>
+
                     <th scope="col">N</th>
                     <th scope="col">Сорт</th>
                     <th scope="col">Кол-во кустов</th>

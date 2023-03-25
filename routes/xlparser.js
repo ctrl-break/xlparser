@@ -31,6 +31,8 @@ router.get('/', restrict, function (req, res) {
 });
 
 router.post('/', restrict, function (req, res) {
+  initData();
+
   if (req.query.checkLists) {
     parseLists(req, res);
     return;
@@ -42,8 +44,6 @@ router.post('/', restrict, function (req, res) {
 
 function parseLists(req, res) {
   // console.log(req);
-
-  initData();
 
   const form = formidable({ multiples: true });
 
@@ -114,7 +114,7 @@ async function initData() {
   store.setItem('cultivars', cultivars);
   
   // console.log('-----------------------------------------------------------');
-  // console.log(store.getItem('cultivars'));
+  console.log(store.getItem('cultivars'));
   console.log(store.getItem('fileName'));
   console.log(store.getItem('sheets'));
   console.log('-----------------------------------------------------------');

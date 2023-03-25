@@ -114,9 +114,9 @@ async function initData() {
   store.setItem('cultivars', cultivars);
   
   // console.log('-----------------------------------------------------------');
-  console.log(store.getItem('cultivars'));
-  console.log(store.getItem('fileName'));
-  console.log(store.getItem('sheets'));
+  // console.log(store.getItem('cultivars'));
+  // console.log(store.getItem('fileName'));
+  // console.log(store.getItem('sheets'));
   console.log('-----------------------------------------------------------');
 }
 
